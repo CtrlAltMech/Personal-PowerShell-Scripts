@@ -51,21 +51,23 @@ $checkRsix = Check-Rsix
 $checkUbi = Check-Ubi
 
 
-# Give-Response $checkRsix $checkUbi
-
+# Do nothing if nothing is running
 if (($checkUbi -eq $false) -and ($checkRsix -eq $false)) {
     Write-Output "It does not appear that Rainbow Six Siege is running or any Ubisoft garbage to support it."
     Write-Output "Done!"
 }
+# Kill Vulkan if its running
 elseif ($checkRsix -eq "RainbowSix_Vulkan") {
     Give-Response $checkRsix $checkUbi
     Kill-Rsix $checkRsix
     
 }
+# Kill regular Rainbow Six if its running
 elseif ($checkRsix -eq "RainbowSix") {
     Give-Response $checkRsix $checkUbi
     Kill-Rsix $checkRsix
 }
+# If nothing else was triggered kill the Ubisoft core process only.
 else {
     Write-Output "Sending kill resonse anyways...."
     Stop-Process -Name upc -ErrorAction Continue

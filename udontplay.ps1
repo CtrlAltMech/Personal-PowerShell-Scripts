@@ -1,4 +1,7 @@
-﻿
+﻿# This script just looks for Ubisoft and Rainbow Six Siege services and kills them.
+# By: MechMaster48 
+
+
 # Checks to see which version of Rainbow Six Siege process is running (if any)
 function Check-Rsix {
 
@@ -30,42 +33,40 @@ function Check-Ubi {
     }
 }
 
-# Issues the response as well as the process kill...for now
-function Give-Response  ($r6version){
-    Write-Output "R6 is running $r6version"
-    Write-Output "Killing Rainbow Six Siege and all things Ubisoft..."
-    #Stop-Process -Name $r6version
-    #Stop-Process -Name upc
-    Write-Output "Done"
+# Issues the response
+function Give-Response  ($r6version, $UbiStatus){
+    Write-Output "R6 is running $r6version, and status for Ubisoft Core is $UbiStatus"
+    Write-Output "Killing Rainbow Six Siege and all things Ubisoft if they are running..."
+    Write-Output "Done!"
 }
+
+# Stops the Ubisoft and Rainbow Six processes
+function Kill-Rsix ($r6version){
+    Stop-Process -Name $r6version -ErrorAction Continue
+    Stop-Process -Name upc -ErrorAction Continue
+}
+
 
 $checkRsix = Check-Rsix
 $checkUbi = Check-Ubi
 
-Write-Output "Looks like checkRsix is returning $checkRsix and checkUbi is returning $checkUbi"
+
+# Give-Response $checkRsix $checkUbi
 
 if (($checkUbi -eq $false) -and ($checkRsix -eq $false)) {
     Write-Output "It does not appear that Rainbow Six Siege is running or any Ubisoft garbage to support it."
-    Read-Host "Press Enter to exit the script"
+    Write-Output "Done!"
 }
 elseif ($checkRsix -eq "RainbowSix_Vulkan") {
-    Give-Response $checkRsix
+    Give-Response $checkRsix $checkUbi
+    Kill-Rsix $checkRsix
+    
 }
-elseif ($checkRsix -eq "rb6") {
-    Write-Output "R6 is running openGL"
+elseif ($checkRsix -eq "RainbowSix") {
+    Give-Response $checkRsix $checkUbi
+    Kill-Rsix $checkRsix
 }
 else {
-    Write-Output "RB6 is not running"
+    Write-Output "Sending kill resonse anyways...."
+    Stop-Process -Name upc -ErrorAction Continue
 }
-
-#$isRunning = Check-Rsix
-
-#Write-Output "Rainbow Six is not running..."
-#Write-Output "Killing all things Ubisoft..."
-
-#Write-Output $isRunning
-
-
-
-#Stop-Process -Name RainbowSix_Vulkan
-#Stop-Process -Name upc

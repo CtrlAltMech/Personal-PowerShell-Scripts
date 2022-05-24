@@ -69,6 +69,6 @@ elseif ($checkRsix -eq "RainbowSix") {
 }
 # If nothing else was triggered kill the Ubisoft core process only.
 else {
-    Write-Output "Sending kill resonse anyways...."
+    Write-Output "Rainbow Six Siege not running. Sending kill command for the Ubisoft Core process only..."
     Stop-Process -Name upc -ErrorAction Continue
 }
